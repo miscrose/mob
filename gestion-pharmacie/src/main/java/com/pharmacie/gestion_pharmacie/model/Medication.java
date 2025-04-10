@@ -1,0 +1,26 @@
+package com.pharmacie.gestion_pharmacie.model;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Entity
+@Table(name = "medications")
+@Data
+public class Medication {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(length = 1000)
+    private String description;
+
+    @Column(nullable = false)
+    private String imageUrl; // Chemin de l'image stockée
+
+    @ManyToOne
+    @JoinColumn(name = "pharmacy_id")
+    private Pharmacy pharmacy;
+} 
