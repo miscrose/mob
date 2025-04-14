@@ -12,8 +12,8 @@ import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Configuration de l'URL de l'API
-//const API_URL = 'http://192.168.1.102:8080';
-const API_URL = 'http://localhost:8080';
+const API_URL = 'http://192.168.1.102:8080';
+//const API_URL = 'http://localhost:8080';
 export default function LoginScreen() {
   const [formData, setFormData] = useState({
     email: '',
@@ -39,7 +39,9 @@ export default function LoginScreen() {
         if (response.data.pharmacy) {
           await AsyncStorage.setItem('pharmacyData', JSON.stringify(response.data.pharmacy));
         }
-        
+
+        const data = await AsyncStorage.getItem('pharmacyData');
+        console.log('veriiiif',data)
         // Rediriger vers le dashboard
         router.replace('/(drawer)');
       } else {

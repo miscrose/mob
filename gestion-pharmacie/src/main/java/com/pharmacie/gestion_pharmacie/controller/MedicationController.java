@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/medications")
@@ -16,26 +15,35 @@ public class MedicationController {
 
     @Autowired
     private MedicationService medicationService;
+
+
+
     @PostMapping("/test")
-public void test(){System.out.println("test");}
+    public void test() {
+        System.out.println("test");
+    }
 
     @PostMapping("/add")
-     public ResponseEntity<?> addMedication(
-    
+    public ResponseEntity<?> addMedication(
             @RequestParam("name") String name,
             @RequestParam("description") String description,
-            @RequestParam("image") MultipartFile image) {
-                System.out.println("aaa");
+            @RequestParam("image") MultipartFile image,
+            @RequestParam("pharmacyId") long pharmacyId) {
         try {
-            Medication medication = medicationService.addMedication(name, description, image);
+            System.out.println("ID de la pharmacie reçu : " + pharmacyId);
+            Medication medication = medicationService.addMedication(name, description, image, pharmacyId);
             return ResponseEntity.ok(medication);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("Erreur lors de l'ajout du médicament: " + e.getMessage());
         }
     }
-  
-    @GetMapping
-    public ResponseEntity<List<Medication>> getAllMedications() {
-        return ResponseEntity.ok(medicationService.getAllMedications());
+
+    @GetMapping("allmedications")
+    public ResponseEntity<?> getAllMedications() {
+        try {
+            return ResponseEntity.ok(medicationService.getAllMedications());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erreur lors de la récupération des médicaments: " + e.getMessage());
+        }
     }
 } 

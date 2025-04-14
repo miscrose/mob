@@ -15,8 +15,8 @@ import axios from 'axios';
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-//const API_URL = 'http://192.168.1.102:8080';
-const API_URL = 'http://localhost:8080';
+const API_URL = 'http://192.168.1.102:8080';
+//const API_URL = 'http://localhost:8080';
 
 export default function AddMedicationScreen() {
   const [formData, setFormData] = useState({
@@ -76,10 +76,24 @@ export default function AddMedicationScreen() {
 
       setIsLoading(true);
 
+      // Récupérer les données de la pharmacie depuis AsyncStorage
+      const pharmacyData = await AsyncStorage.getItem('pharmacyData');
+      if (!pharmacyData) {
+        throw new Error('Données de la pharmacie non trouvées');
+      }
+      const data = await AsyncStorage.getItem('pharmacyData');
+      console.log('veriiiif',data)
+
+
+      const pharmacy = JSON.parse(pharmacyData);
+      const pharmacyId = pharmacy.id;
+
+      console.log('pharmacyId',pharmacyId)
       // Préparation du FormData
       const formDataToSend = new FormData();
       formDataToSend.append('name', formData.name);
       formDataToSend.append('description', formData.description);
+      formDataToSend.append('pharmacyId', pharmacyId);
 
       // Traitement de l'image selon la plateforme
       let imageUri = image;

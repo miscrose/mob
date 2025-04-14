@@ -2,16 +2,17 @@ package com.pharmacie.gestion_pharmacie.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
+
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
 import javax.crypto.SecretKey;
 import jakarta.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
+
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import java.security.Key;
 import java.util.Date;
 
 import java.util.Map;
@@ -66,4 +67,6 @@ public class JwtUtil {
                 .getBody()
                 .getSubject();
     }
+
+   
 } 

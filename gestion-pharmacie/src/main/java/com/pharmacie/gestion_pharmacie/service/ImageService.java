@@ -10,11 +10,13 @@ import java.util.UUID;
 
 @Service
 public class ImageService {
-    private final String uploadDir = "uploads/medications/";
+    private final String baseUploadDir = "uploads/medications/";
 
-    public String saveImage(MultipartFile file) throws IOException {
-        // Créer le dossier s'il n'existe pas
-        Path uploadPath = Paths.get(uploadDir);
+    public String saveImage(MultipartFile file, Long pharmacyId) throws IOException {
+        // Créer le dossier spécifique à la pharmacie
+        String pharmacyDir = baseUploadDir + "pharmacy_" + pharmacyId + "/";
+        Path uploadPath = Paths.get(pharmacyDir);
+        
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
@@ -23,15 +25,16 @@ public class ImageService {
         String originalFilename = file.getOriginalFilename();
         if (originalFilename == null) {
             throw new IllegalArgumentException("Le nom du fichier ne peut pas être null");
-        }else{
-            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            String newFilename = UUID.randomUUID().toString() + extension;
+        }
+        
+        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        String newFilename = UUID.randomUUID().toString() + extension;
 
         // Sauvegarder le fichier
         Path filePath = uploadPath.resolve(newFilename);
         Files.copy(file.getInputStream(), filePath);
 
         // Retourner le chemin relatif
-        return uploadDir + newFilename;
+        return pharmacyDir + newFilename;
     }
-} }
+}
