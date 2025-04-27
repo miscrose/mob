@@ -15,17 +15,20 @@ public class PurchaseService {
     private final PurchaseItemRepository purchaseItemRepository;
     private final MedicationRepository medicationRepository;
     private final PharmacyRepository pharmacyRepository;
+    private final StockService stockService;
 
     public PurchaseService(
         PurchaseRepository purchaseRepository,
         PurchaseItemRepository purchaseItemRepository,
         MedicationRepository medicationRepository,
-        PharmacyRepository pharmacyRepository
+        PharmacyRepository pharmacyRepository,
+        StockService stockService
     ) {
         this.purchaseRepository = purchaseRepository;
         this.purchaseItemRepository = purchaseItemRepository;
         this.medicationRepository = medicationRepository;
         this.pharmacyRepository = pharmacyRepository;
+        this.stockService = stockService;
     }
 
     @Transactional
@@ -51,6 +54,9 @@ public class PurchaseService {
             .map(dto -> {
                 Medication medication = medicationRepository.findById(dto.getMedicationId())
                     .orElseThrow(() -> new RuntimeException("Médicament non trouvé"));
+
+                // Mettre à jour le stock
+                stockService.addToStock(pharmacyId, dto.getMedicationId(), dto.getQuantity(), dto.getExpirationDate());
 
                 PurchaseItem item = new PurchaseItem();
                 item.setPurchase(savedPurchase);

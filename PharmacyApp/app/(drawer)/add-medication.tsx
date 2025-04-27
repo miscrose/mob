@@ -14,9 +14,7 @@ import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const API_URL = 'http://192.168.1.102:8080';
-//const API_URL = 'http://localhost:8080';
+import {API_URL} from '../../constants/config';
 
 export default function AddMedicationScreen() {
   const [formData, setFormData] = useState({

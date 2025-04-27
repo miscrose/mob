@@ -1,37 +1,29 @@
-import { View, Text, StyleSheet } from 'react-native';
-import { useEffect, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-interface PharmacyData {
-  id: number;
-  name: string;
-  email: string;
-  address: string;
-  phone: string;
-}
+import React from 'react';
+import { View, Text, Image, StyleSheet } from 'react-native';
+import { API_URL } from '../../constants/config';
 
 export default function Dashboard() {
-  const [pharmacyName, setPharmacyName] = useState<string>('');
-
-  useEffect(() => {
-    const getPharmacyData = async () => {
-      try {
-        const pharmacyData = await AsyncStorage.getItem('pharmacyData');
-        if (pharmacyData) {
-          const data: PharmacyData = JSON.parse(pharmacyData);
-          setPharmacyName(data.name);
-        }
-      } catch (error) {
-        console.error('Erreur lors de la récupération des données:', error);
-      }
-    };
-
-    getPharmacyData();
-  }, []);
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tableau de bord - {pharmacyName}</Text>
+      <Text style={styles.title}>Test d'affichage d'images</Text>
+      
+      <View style={styles.imageContainer}>
+        <Text>Test image 1:</Text>
+        <Image 
+          source={{ uri: `${API_URL}/uploads/medications/pharmacy_4/a.jpeg` }}
+          style={styles.image}
+          onError={(e) => console.log('Erreur image 1:', e.nativeEvent.error)}
+        />
+      </View>
+
+      <View style={styles.imageContainer}>
+        <Text>Test image 2:</Text>
+        <Image 
+          source={{ uri: `${API_URL}/uploads/medications/test.jpg` }}
+          style={styles.image}
+          onError={(e) => console.log('Erreur image 2:', e.nativeEvent.error)}
+        />
+      </View>
     </View>
   );
 }
@@ -39,11 +31,19 @@ export default function Dashboard() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 20,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  imageContainer: {
+    marginBottom: 20,
+  },
+  image: {
+    width: 200,
+    height: 200,
+    marginTop: 10,
   },
 }); 

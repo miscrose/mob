@@ -14,9 +14,9 @@ import {
 
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {API_URL} from '../../../constants/config';
 
-const API_URL = 'http://192.168.1.102:8080';
-//const API_URL = 'http://localhost:8080';
+
 
 interface Medication {
   id: number;

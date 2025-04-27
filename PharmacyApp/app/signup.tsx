@@ -10,10 +10,8 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import { router } from 'expo-router';
+import {API_URL} from '../constants/config';
 
-// Configuration de l'URL de l'API
-//const API_URL = 'http://192.168.1.101:8080'; // Votre adresse IP locale
-const API_URL = 'http://localhost:8080';
 export default function SignUpScreen() {
   const [formData, setFormData] = useState({
     name: '',
