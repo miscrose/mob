@@ -20,6 +20,7 @@ export default function AddMedicationScreen() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
+    seuil: 0,
   });
   const [image, setImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -74,34 +75,26 @@ export default function AddMedicationScreen() {
 
       setIsLoading(true);
 
-      // Récupérer les données de la pharmacie depuis AsyncStorage
       const pharmacyData = await AsyncStorage.getItem('pharmacyData');
       if (!pharmacyData) {
         throw new Error('Données de la pharmacie non trouvées');
       }
-      const data = await AsyncStorage.getItem('pharmacyData');
-      console.log('veriiiif',data)
-
 
       const pharmacy = JSON.parse(pharmacyData);
       const pharmacyId = pharmacy.id;
 
-      console.log('pharmacyId',pharmacyId)
-      // Préparation du FormData
       const formDataToSend = new FormData();
       formDataToSend.append('name', formData.name);
       formDataToSend.append('description', formData.description);
       formDataToSend.append('pharmacyId', pharmacyId);
+      formDataToSend.append('seuil', formData.seuil.toString());
 
-      // Traitement de l'image selon la plateforme
       let imageUri = image;
       if (Platform.OS === 'web') {
-        // Pour le web, on utilise directement l'URL de l'image
         const response = await fetch(image);
         const blob = await response.blob();
         formDataToSend.append('image', blob, 'medication.jpg');
       } else {
-        // Pour mobile
         imageUri = Platform.OS === 'android' ? image : image.replace('file://', '');
         const imageName = imageUri.split('/').pop() || 'medication.jpg';
         const imageType = `image/${imageName.split('.').pop() || 'jpg'}`;
@@ -127,7 +120,7 @@ export default function AddMedicationScreen() {
             'Content-Type': 'multipart/form-data',
             'Authorization': `Bearer ${token}`,
           },
-          timeout: 30000, // 30 secondes de timeout
+          timeout: 30000,
         }
       );
 
@@ -169,6 +162,14 @@ export default function AddMedicationScreen() {
           numberOfLines={4}
           value={formData.description}
           onChangeText={(text) => setFormData({ ...formData, description: text })}
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Seuil d'alerte"
+          keyboardType="numeric"
+          value={formData.seuil.toString()}
+          onChangeText={(text) => setFormData({ ...formData, seuil: parseInt(text) || 0 })}
         />
 
         <View style={styles.imageContainer}>

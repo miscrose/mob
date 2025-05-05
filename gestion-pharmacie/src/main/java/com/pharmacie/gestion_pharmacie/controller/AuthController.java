@@ -38,10 +38,10 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Email is already taken!");
         }
 
-        // Encode password
+      
         pharmacy.setPassword(passwordEncoder.encode(pharmacy.getPassword()));
         
-        // Save pharmacy
+     
         pharmacyRepository.save(pharmacy);
         
         return ResponseEntity.ok("Pharmacy registered successfully!");
@@ -63,13 +63,13 @@ public class AuthController {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            // Récupérer les informations de la pharmacie
+        
             Pharmacy pharmacy = pharmacyRepository.findByEmail(loginRequest.get("email"))
                 .orElseThrow(() -> new RuntimeException("Pharmacie non trouvée"));
 
             System.out.println("Pharmacie trouvée: " + pharmacy.getName());
 
-            // Créer les claims pour le token
+         
             Map<String, Object> claims = new HashMap<>();
             claims.put("id", pharmacy.getId());
             claims.put("name", pharmacy.getName());
@@ -77,11 +77,11 @@ public class AuthController {
             claims.put("address", pharmacy.getAddress());
             claims.put("phone", pharmacy.getPhone());
 
-            // Générer le token JWT
+    
             String token = jwtUtil.generateToken(pharmacy.getEmail(), claims);
             System.out.println("Token généré avec succès");
 
-            // Créer la réponse
+           
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("pharmacy", claims);

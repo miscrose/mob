@@ -18,7 +18,10 @@ public class Medication {
     private String description;
 
     @Column(nullable = false)
-    private String imageUrl; // Chemin de l'image stockée
+    private String imageUrl;
+
+    @Column(nullable = false)
+    private int seuil; 
 
     @ManyToOne
     @JoinColumn(name = "pharmacy_id")

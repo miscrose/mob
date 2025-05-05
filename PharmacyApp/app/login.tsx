@@ -11,6 +11,7 @@ import axios from 'axios';
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {API_URL} from '../constants/config';
+import { registerDeviceToken } from '../services/notificationService';
 
 export default function LoginScreen() {
   const [formData, setFormData] = useState({
@@ -36,6 +37,15 @@ export default function LoginScreen() {
         // Stocker les informations de la pharmacie
         if (response.data.pharmacy) {
           await AsyncStorage.setItem('pharmacyData', JSON.stringify(response.data.pharmacy));
+          
+          // Enregistrer le token de notification
+          try {
+            await registerDeviceToken(response.data.pharmacy.id, response.data.token);
+            console.log('Token de notification enregistré avec succès');
+          } catch (error) {
+            console.error('Erreur lors de l\'enregistrement du token de notification:', error);
+            // On continue même si l'enregistrement du token échoue
+          }
         }
 
         const data = await AsyncStorage.getItem('pharmacyData');

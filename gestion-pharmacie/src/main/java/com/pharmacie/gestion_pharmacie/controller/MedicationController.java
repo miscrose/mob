@@ -28,10 +28,11 @@ public class MedicationController {
             @RequestParam("name") String name,
             @RequestParam("description") String description,
             @RequestParam("image") MultipartFile image,
-            @RequestParam("pharmacyId") long pharmacyId) {
+            @RequestParam("pharmacyId") long pharmacyId,
+            @RequestParam("seuil") int seuil) {
         try {
             System.out.println("ID de la pharmacie reçu : " + pharmacyId);
-            Medication medication = medicationService.addMedication(name, description, image, pharmacyId);
+            Medication medication = medicationService.addMedication(name, description, image, pharmacyId, seuil);
             return ResponseEntity.ok(medication);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erreur lors de l'ajout du médicament: " + e.getMessage());

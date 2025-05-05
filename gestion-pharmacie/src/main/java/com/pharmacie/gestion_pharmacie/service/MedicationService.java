@@ -26,23 +26,21 @@ public class MedicationService {
         this.imageService = imageService;
     }
 
-    public Medication addMedication(String name, String description, MultipartFile image, Long pharmacyId) throws Exception {
+    public Medication addMedication(String name, String description, MultipartFile image, Long pharmacyId, int seuil) throws Exception {
         try {
-            // Récupérer la pharmacie
+            
             Pharmacy pharmacy = pharmacyRepository.findById(pharmacyId)
                 .orElseThrow(() -> new Exception("Pharmacie non trouvée"));
 
-            // Sauvegarder l'image dans le dossier de la pharmacie
             String imagePath = imageService.saveImage(image, pharmacyId);
 
-            // Créer le médicament
             Medication medication = new Medication();
             medication.setName(name);
             medication.setDescription(description);
             medication.setImageUrl(imagePath);
             medication.setPharmacy(pharmacy);
+            medication.setSeuil(seuil);
 
-            // Sauvegarder le médicament
             return medicationRepository.save(medication);
         } catch (Exception e) {
             throw new Exception("Erreur lors de l'ajout du médicament: " + e.getMessage());

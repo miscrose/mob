@@ -69,7 +69,7 @@ public class PurchaseService {
             })
             .collect(Collectors.toList());
 
-        // Sauvegarder tous les items
+      
         purchaseItemRepository.saveAll(purchaseItems);
 
         return savedPurchase;
