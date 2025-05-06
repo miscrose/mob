@@ -26,11 +26,10 @@ public class DeviceTokenService {
             throw new RuntimeException("Ce token existe déjà");
         }
 
-        // Récupérer la pharmacie
+        
         Pharmacy pharmacy = pharmacyRepository.findById(pharmacyId)
             .orElseThrow(() -> new RuntimeException("Pharmacie non trouvée"));
 
-        // Créer et sauvegarder le nouveau token
         DeviceToken deviceToken = new DeviceToken();
         deviceToken.setToken(token);
         deviceToken.setPharmacy(pharmacy);

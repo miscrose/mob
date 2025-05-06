@@ -23,7 +23,7 @@ public class Stock {
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
     private List<StockItem> stockItems;
 
-    // Getters and Setters
+
     public Long getId() {
         return id;
     }

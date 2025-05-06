@@ -20,7 +20,8 @@ export default function AddMedicationScreen() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    seuil: 0,
+    seuil: '',
+    sellPrice: '',
   });
   const [image, setImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -73,6 +74,11 @@ export default function AddMedicationScreen() {
         return;
       }
 
+      if (!formData.seuil || !formData.sellPrice) {
+        Alert.alert('Erreur', 'Veuillez remplir tous les champs');
+        return;
+      }
+
       setIsLoading(true);
 
       const pharmacyData = await AsyncStorage.getItem('pharmacyData');
@@ -87,7 +93,8 @@ export default function AddMedicationScreen() {
       formDataToSend.append('name', formData.name);
       formDataToSend.append('description', formData.description);
       formDataToSend.append('pharmacyId', pharmacyId);
-      formDataToSend.append('seuil', formData.seuil.toString());
+      formDataToSend.append('seuil', formData.seuil);
+      formDataToSend.append('sellPrice', formData.sellPrice);
 
       let imageUri = image;
       if (Platform.OS === 'web') {
@@ -166,10 +173,18 @@ export default function AddMedicationScreen() {
 
         <TextInput
           style={styles.input}
-          placeholder="Seuil d'alerte"
+          placeholder="Seuil d'alerte (quantité minimale en stock)"
           keyboardType="numeric"
-          value={formData.seuil.toString()}
-          onChangeText={(text) => setFormData({ ...formData, seuil: parseInt(text) || 0 })}
+          value={formData.seuil}
+          onChangeText={(text) => setFormData({ ...formData, seuil: text })}
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Prix de vente (en €)"
+          keyboardType="numeric"
+          value={formData.sellPrice}
+          onChangeText={(text) => setFormData({ ...formData, sellPrice: text })}
         />
 
         <View style={styles.imageContainer}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -19,46 +19,33 @@ export default function StockScreen() {
   const [token, setToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const loadPharmacyData = async () => {
+  const loadPharmacyData = useCallback(async () => {
     try {
-      const pharmacyData = await AsyncStorage.getItem('pharmacyData');
-      if (pharmacyData) {
-        const token = await AsyncStorage.getItem('token');
-        setToken(token);
+      const [pharmacyData, storedToken] = await Promise.all([
+        AsyncStorage.getItem('pharmacyData'),
+        AsyncStorage.getItem('token')
+      ]);
+
+      if (pharmacyData && storedToken) {
+        setToken(storedToken);
         const pharmacy = JSON.parse(pharmacyData);
         setPharmacyId(pharmacy.id);
-        return pharmacy.id; // Retourner l'ID pour l'utiliser dans useFocusEffect
+        return { id: pharmacy.id, token: storedToken };
       }
       return null;
     } catch (error) {
       console.error('Error loading pharmacy data:', error);
       return null;
     }
-  };
-
-  useEffect(() => {
-    loadPharmacyData();
   }, []);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const fetchData = async () => {
-        const id = await loadPharmacyData();
-        if (id !== null) {
-          await fetchMedications(id);
-        }
-      };
-      fetchData();
-    }, [])
-  );
-
-  const fetchMedications = async (id: number) => {
+  const fetchMedications = useCallback(async (id: number, authToken: string) => {
     try {
       setLoading(true);
       const response = await axios.get(`${API_URL}/api/stock/pharmacy/${id}`, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${authToken}`
         },
       });
       setMedications(response.data);
@@ -69,14 +56,33 @@ export default function StockScreen() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  const loadData = useCallback(async () => {
+    const data = await loadPharmacyData();
+    if (data) {
+      await fetchMedications(data.id, data.token);
+    }
+  }, [loadPharmacyData, fetchMedications]);
+
+  // Chargement initial
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  // Rechargement à chaque focus
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [loadData])
+  );
 
   const filteredMedications = medications.filter(med => {
     const matchesSearch = med.name.toLowerCase().includes(searchQuery.toLowerCase());
     if (!activeFilter) return matchesSearch;
     
     if (activeFilter === 'low') {
-      return matchesSearch && med.totalQuantity < 100;
+      return matchesSearch && med.totalQuantity < med.seuil;
     }
     if (activeFilter === 'expiring') {
       return matchesSearch && med.lots.some(lot => {
@@ -102,7 +108,7 @@ export default function StockScreen() {
     return (
       <View style={styles.container}>
         <Text style={styles.error}>{error}</Text>
-        <TouchableOpacity onPress={() => fetchMedications(pharmacyId!)} style={styles.retryButton}>
+        <TouchableOpacity onPress={() => loadData()} style={styles.retryButton}>
           <Text style={styles.retryButtonText}>Réessayer</Text>
         </TouchableOpacity>
       </View>

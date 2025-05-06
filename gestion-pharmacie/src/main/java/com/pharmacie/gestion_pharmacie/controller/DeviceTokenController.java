@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RestController
@@ -42,9 +43,14 @@ public class DeviceTokenController {
     @DeleteMapping("/{token}")
     public ResponseEntity<Void> deleteToken(@PathVariable String token) {
         try {
-            deviceTokenService.deleteToken(token);
+            System.out.println("Token reçu (encodé): " + token);
+            String decodedToken = URLDecoder.decode(token, StandardCharsets.UTF_8.name());
+            System.out.println("Token décodé: " + decodedToken);
+            deviceTokenService.deleteToken(decodedToken);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
+            System.err.println("Erreur lors de la suppression du token: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }

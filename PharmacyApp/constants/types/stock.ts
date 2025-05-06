@@ -10,4 +10,5 @@ export interface MedicationStock {
     imageUrl: string | null;
     totalQuantity: number;
     lots: StockLot[];
+    seuil: number;
 } 

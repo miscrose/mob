@@ -43,8 +43,7 @@ export default function LoginScreen() {
             await registerDeviceToken(response.data.pharmacy.id, response.data.token);
             console.log('Token de notification enregistré avec succès');
           } catch (error) {
-            console.error('Erreur lors de l\'enregistrement du token de notification:', error);
-            // On continue même si l'enregistrement du token échoue
+            console.log('Erreur lors de l\'enregistrement du token de notification:', error);
           }
         }
 

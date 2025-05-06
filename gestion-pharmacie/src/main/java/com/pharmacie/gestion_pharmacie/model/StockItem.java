@@ -17,7 +17,7 @@ public class StockItem {
     private int quantity;
     private LocalDate expirationDate;
 
-    // Getters and Setters
+ 
     public Long getId() {
         return id;
     }

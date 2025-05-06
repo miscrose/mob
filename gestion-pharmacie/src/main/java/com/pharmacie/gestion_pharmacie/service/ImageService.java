@@ -13,7 +13,7 @@ public class ImageService {
     private final String baseUploadDir = "uploads/medications/";
 
     public String saveImage(MultipartFile file, Long pharmacyId) throws IOException {
-        // Créer le dossier spécifique à la pharmacie
+      
         String pharmacyDir = baseUploadDir + "pharmacy_" + pharmacyId + "/";
         Path uploadPath = Paths.get(pharmacyDir);
         

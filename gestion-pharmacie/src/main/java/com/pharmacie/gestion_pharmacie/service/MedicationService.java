@@ -4,8 +4,8 @@ import com.pharmacie.gestion_pharmacie.model.Medication;
 import com.pharmacie.gestion_pharmacie.model.Pharmacy;
 import com.pharmacie.gestion_pharmacie.repository.MedicationRepository;
 import com.pharmacie.gestion_pharmacie.repository.PharmacyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -26,7 +26,8 @@ public class MedicationService {
         this.imageService = imageService;
     }
 
-    public Medication addMedication(String name, String description, MultipartFile image, Long pharmacyId, int seuil) throws Exception {
+    @Transactional
+    public Medication addMedication(String name, String description, MultipartFile image, Long pharmacyId, int seuil, double sellPrice) throws Exception {
         try {
             
             Pharmacy pharmacy = pharmacyRepository.findById(pharmacyId)
@@ -40,6 +41,7 @@ public class MedicationService {
             medication.setImageUrl(imagePath);
             medication.setPharmacy(pharmacy);
             medication.setSeuil(seuil);
+            medication.setSellPrice(sellPrice);
 
             return medicationRepository.save(medication);
         } catch (Exception e) {

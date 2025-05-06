@@ -23,6 +23,9 @@ public class Medication {
     @Column(nullable = false)
     private int seuil; 
 
+    @Column(nullable = false)
+    private double sellPrice;
+
     @ManyToOne
     @JoinColumn(name = "pharmacy_id")
     private Pharmacy pharmacy;

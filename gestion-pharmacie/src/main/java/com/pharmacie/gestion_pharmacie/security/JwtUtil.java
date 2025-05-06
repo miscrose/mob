@@ -10,7 +10,7 @@ import javax.crypto.SecretKey;
 import jakarta.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 
-import io.jsonwebtoken.Claims;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import java.util.Date;

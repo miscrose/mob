@@ -9,6 +9,7 @@ public class MedicationStockDTO {
     private String name;
     private String imageUrl;
     private Integer totalQuantity;
+    private Integer seuil;
     private List<LotDTO> lots;
 
     @Data
