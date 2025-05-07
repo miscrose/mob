@@ -55,7 +55,7 @@ export default function LoginScreen() {
         Alert.alert('Erreur', 'Réponse invalide du serveur');
       }
     } catch (error) {
-      console.error('Erreur de connexion:', error);
+    
       
       if (axios.isAxiosError(error)) {
         const errorMessage = error.response?.data?.message || error.message || 'Une erreur est survenue';
