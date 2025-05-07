@@ -133,7 +133,13 @@ export default function AddMedicationScreen() {
 
       console.log('Réponse reçue:', response.data);
       Alert.alert('Succès', 'Médicament ajouté avec succès !');
-      router.back();
+      setFormData({
+        name: '',
+        description: '',
+        seuil: '',
+        sellPrice: '',
+      });
+      setImage(null);
     } catch (error) {
       console.error('Erreur détaillée:', error);
       if (axios.isAxiosError(error)) {

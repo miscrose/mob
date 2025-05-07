@@ -29,6 +29,24 @@ export default function DrawerLayout() {
         }} 
       />
       <Drawer.Screen 
+        name="dashboard" 
+        options={{ 
+          title: 'Tableau de bord',
+          drawerIcon: ({ color, size }: { color: string; size: number }) => (
+            <FontAwesome name="dashboard" size={size} color={color} />
+          ),
+        }} 
+      />
+      <Drawer.Screen 
+        name="stock" 
+        options={{ 
+          title: 'Gestion du Stock',
+          drawerIcon: ({ color, size }: { color: string; size: number }) => (
+            <FontAwesome name="cube" size={size} color={color} />
+          ),
+        }} 
+      />
+      <Drawer.Screen 
         name="sales" 
         options={{ 
           title: 'Vente/Achat',

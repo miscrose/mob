@@ -139,7 +139,7 @@ export default function VenteScreen() {
         }
       );
 
-      // Recharger les médicaments pour mettre à jour les quantités
+      
       await loadMedications();
 
       Alert.alert('Succès', 'Vente enregistrée avec succès');
@@ -186,7 +186,7 @@ export default function VenteScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.formSection}>
-        <Text style={styles.title}>Nouvelle Vente</Text>
+
         
         <View style={styles.formContainer}>
           <View style={styles.searchContainer}>

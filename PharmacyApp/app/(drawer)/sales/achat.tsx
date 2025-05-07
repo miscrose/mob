@@ -135,7 +135,6 @@ export default function AchatScreen() {
     );
   };
 
-  // Charger les médicaments au démarrage
   useEffect(() => {
     loadMedications();
   }, []);
@@ -278,9 +277,9 @@ export default function AchatScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Formulaire toujours visible en haut */}
+   
       <View style={styles.formSection}>
-        <Text style={styles.title}>Nouvel Achat</Text>
+        
         
         <View style={styles.formContainer}>
           <View style={styles.searchContainer}>
