@@ -7,10 +7,14 @@ import {
   StyleSheet,
   Alert,
   FlatList,
+  ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {API_URL} from '../../../constants/config';
+import { useFocusEffect } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 interface Medication {
   id: number;
@@ -36,7 +40,12 @@ export default function VenteScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [saleItems, setSaleItems] = useState<SaleItem[]>([]);
 
-  // Charger les médicaments au démarrage
+  useFocusEffect(
+    React.useCallback(() => {
+      loadMedications();
+    }, [])
+  );
+
   useEffect(() => {
     loadMedications();
   }, []);
@@ -186,7 +195,15 @@ export default function VenteScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.formSection}>
-
+        <View style={styles.headerTop}>
+          <Text style={styles.title}>Nouvelle vente</Text>
+          <TouchableOpacity 
+            style={styles.refreshButton}
+            onPress={loadMedications}
+          >
+            <Ionicons name="refresh" size={24} color="#007AFF" />
+          </TouchableOpacity>
+        </View>
         
         <View style={styles.formContainer}>
           <View style={styles.searchContainer}>
@@ -475,5 +492,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     marginTop: 10,
+  },
+  headerTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  refreshButton: {
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: '#f0f0f0',
   },
 }); 

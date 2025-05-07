@@ -6,6 +6,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface DailySales {
   date: string;
@@ -33,11 +34,14 @@ export default function Dashboard() {
     { label: '90 derniers jours', value: '90' }
   ];
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, [selectedPeriod]);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchDashboardData();
+    }, [selectedPeriod])
+  );
 
   const fetchDashboardData = async () => {
+    setLoading(true);
     try {
       const token = await AsyncStorage.getItem('token');
       if (!token) {
@@ -86,6 +90,16 @@ export default function Dashboard() {
       <View style={styles.errorContainer}>
         <Ionicons name="alert-circle-outline" size={50} color="#FF3B30" />
         <Text style={styles.errorText}>Erreur lors du chargement des données</Text>
+      </View>
+    );
+  }
+
+  if (dashboardData.dailySales.length === 0) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Ionicons name="stats-chart-outline" size={50} color="#007AFF" />
+        <Text style={styles.emptyText}>Aucune donnée disponible pour la période sélectionnée</Text>
+        <Text style={styles.emptySubText}>Les statistiques apparaîtront dès que des ventes seront enregistrées</Text>
       </View>
     );
   }
@@ -144,7 +158,15 @@ export default function Dashboard() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
- 
+        <View style={styles.headerTop}>
+          <Text style={styles.title}>Tableau de bord</Text>
+          <TouchableOpacity 
+            style={styles.refreshButton}
+            onPress={fetchDashboardData}
+          >
+            <Ionicons name="refresh" size={24} color="#007AFF" />
+          </TouchableOpacity>
+        </View>
         <View style={styles.periodSelector}>
           <Text style={styles.periodLabel}>Période :</Text>
           <View style={styles.pickerContainer}>
@@ -266,6 +288,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 20,
+  },
+  headerTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  refreshButton: {
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: '#f0f0f0',
   },
   periodSelector: {
     flexDirection: 'row',
@@ -389,5 +422,25 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     color: '#007AFF',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    padding: 20,
+  },
+  emptyText: {
+    marginTop: 15,
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+    textAlign: 'center',
+  },
+  emptySubText: {
+    marginTop: 8,
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
   },
 }); 
