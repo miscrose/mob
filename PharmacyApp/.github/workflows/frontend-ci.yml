@@ -1,0 +1,42 @@
+name: Frontend CI
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'PharmacyApp/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'PharmacyApp/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: 'PharmacyApp/package-lock.json'
+    
+    - name: Install Dependencies
+      run: |
+        cd PharmacyApp
+        npm ci
+    
+    - name: Run Tests
+      run: |
+        cd PharmacyApp
+        npm test
+    
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-results
+        path: PharmacyApp/coverage/ 

@@ -90,7 +90,7 @@ public class AuthController {
             
         } catch (Exception e) {
             System.out.println("Erreur lors de l'authentification: " + e.getMessage());
-            e.printStackTrace();
+           
             return ResponseEntity.badRequest().body("Email ou mot de passe incorrect");
         }
     }
