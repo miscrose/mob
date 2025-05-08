@@ -1,6 +1,6 @@
 [build]
 builder = "nixpacks"
-buildCommand = "cd gestion-pharmacie && chmod +x mvnw && ./mvnw clean package -DskipTests"
+buildCommand = "cd gestion-pharmacie && export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 && chmod +x mvnw && ./mvnw clean package -DskipTests"
 
 [deploy]
 startCommand = "cd gestion-pharmacie && java -jar target/gestion-pharmacie-0.0.1-SNAPSHOT.jar"
