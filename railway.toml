@@ -1,6 +1,6 @@
 [build]
-builder = "nixpacks"
-buildCommand = "cd gestion-pharmacie && export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 && chmod +x mvnw && ./mvnw clean package -DskipTests"
+builder = "java"
+buildCommand = "cd gestion-pharmacie && ./mvnw clean package -DskipTests"
 
 [deploy]
 startCommand = "cd gestion-pharmacie && java -jar target/gestion-pharmacie-0.0.1-SNAPSHOT.jar"
@@ -8,5 +8,4 @@ healthcheckPath = "/api/health"
 healthcheckTimeout = 100
 
 [deploy.env]
-JAVA_VERSION = "21"
-JAVA_HOME = "/usr/lib/jvm/java-21-openjdk-amd64" 
+JAVA_VERSION = "21" 
