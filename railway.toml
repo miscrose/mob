@@ -7,7 +7,7 @@ startCommand = "cd gestion-pharmacie && java -jar target/gestion-pharmacie-0.0.1
 
 [deploy.env]
 JAVA_VERSION = "21"
-SPRING_DATASOURCE_URL = "jdbc:mysql://caboose.proxy.rlwy.net:37548/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+SPRING_DATASOURCE_URL = "jdbc:mysql://mysql.railway.internal:3306/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
 SPRING_DATASOURCE_USERNAME = "root"
 SPRING_DATASOURCE_PASSWORD = "LKiXqdwPBVMVEjcSABsQDYfCKQoKshZQ"
 JWT_SECRET = "votreCleSecreteTresLongueEtComplexePourLaProduction"
