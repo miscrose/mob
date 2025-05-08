@@ -6,8 +6,6 @@ buildCommand = "cd gestion-pharmacie && mvn clean package -DskipTests"
 startCommand = "cd gestion-pharmacie && java -jar target/gestion-pharmacie-0.0.1-SNAPSHOT.jar"
 healthcheckPath = "/api/health"
 healthcheckTimeout = 100
-restartPolicyType = "on-failure"
-restartPolicyMaxRetries = 10
 
 [deploy.env]
 JAVA_VERSION = "21" 
