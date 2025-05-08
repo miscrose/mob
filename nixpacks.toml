@@ -1,8 +1,0 @@
-[phases.setup]
-nixPkgs = ["maven"]
-
-[phases.build]
-cmds = ["cd gestion-pharmacie && mvn clean package -DskipTests"]
-
-[start]
-cmd = "cd gestion-pharmacie && java -jar target/gestion-pharmacie-0.0.1-SNAPSHOT.jar" 

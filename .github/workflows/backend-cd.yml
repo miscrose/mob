@@ -27,8 +27,7 @@ jobs:
       - name: Build with Maven
         run: |
           cd gestion-pharmacie
-          chmod +x ./mvnw
-          ./mvnw clean package -DskipTests
+          mvn clean package -DskipTests
 
       - name: Install Railway CLI
         run: npm i -g @railway/cli
