@@ -117,10 +117,11 @@ public class MedicationControllerTest {
     }
 
     private Pharmacy createTestPharmacy() throws Exception {
-        pharmacyRepository.deleteAll();
-        medicationRepository.deleteAll();
+        // Nettoyer la base avant le test
+        medicationRepository.deleteAll(); 
+        pharmacyRepository.deleteAll();   
 
-    
+        // Créer une pharmacie de test
         Pharmacy pharmacy = new Pharmacy();
         pharmacy.setName("Test Pharmacy");
         pharmacy.setEmail("test@pharmacy.com");
@@ -128,15 +129,19 @@ public class MedicationControllerTest {
         pharmacy.setAddress("123 Test Street");
         pharmacy.setPhone("1234567890");
 
-     
-       mockMvc.perform(post("/api/auth/signup")
+        System.out.println("Signup request: " + objectMapper.writeValueAsString(pharmacy));
+
+       
+        MvcResult result = mockMvc.perform(post("/api/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(pharmacy)))
                 .andExpect(status().isOk())
                 .andReturn();
 
+        System.out.println("Signup response: " + result.getResponse().getContentAsString());
 
-                Pharmacy savedPharmacy = pharmacyRepository.findByEmail("test@pharmacy.com")
+      
+        Pharmacy savedPharmacy = pharmacyRepository.findByEmail("test@pharmacy.com")
                 .orElseThrow(() -> new Exception("Pharmacy not found after signup"));
 
         System.out.println("Saved pharmacy: " + objectMapper.writeValueAsString(savedPharmacy));
