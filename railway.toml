@@ -7,7 +7,7 @@ startCommand = "cd gestion-pharmacie && java -jar target/gestion-pharmacie-0.0.1
 
 [deploy.env]
 JAVA_VERSION = "21"
-SPRING_DATASOURCE_URL = "${MYSQL_URL}"
-SPRING_DATASOURCE_USERNAME = "root"
-SPRING_DATASOURCE_PASSWORD = "LKiXqdwPBVMVEjcSABsQDYfCKQoKshZQ"
+SPRING_DATASOURCE_URL = "jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/${MYSQLDATABASE}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+SPRING_DATASOURCE_USERNAME = "${MYSQLUSER}"
+SPRING_DATASOURCE_PASSWORD = "${MYSQLPASSWORD}"
 JWT_SECRET = "votreCleSecreteTresLongueEtComplexePourLaProduction"
