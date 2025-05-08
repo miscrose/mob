@@ -40,7 +40,6 @@ jobs:
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: |
-          cd gestion-pharmacie
           railway login --token $RAILWAY_TOKEN
           railway link
           railway variables set \
@@ -48,4 +47,4 @@ jobs:
             SPRING_DATASOURCE_USERNAME="$SPRING_DATASOURCE_USERNAME" \
             SPRING_DATASOURCE_PASSWORD="$SPRING_DATASOURCE_PASSWORD" \
             JWT_SECRET="$JWT_SECRET"
-          railway up --service backend 
+          railway up 
