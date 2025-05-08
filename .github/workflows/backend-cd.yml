@@ -3,6 +3,8 @@ name: Backend CD
 on:
   push:
     branches: [main]
+    paths:
+      - 'gestion-pharmacie/**'
 
 jobs:
   deploy:
