@@ -7,3 +7,7 @@ startCommand = "cd gestion-pharmacie && java -jar target/gestion-pharmacie-0.0.1
 
 [deploy.env]
 JAVA_VERSION = "21"
+SPRING_DATASOURCE_URL = "jdbc:mysql://containers-us-west-207.railway.app:7875/railway"
+SPRING_DATASOURCE_USERNAME = "root"
+SPRING_DATASOURCE_PASSWORD = "your_password_here"
+JWT_SECRET = "votreCleSecreteTresLongueEtComplexePourLaProduction"
