@@ -33,7 +33,7 @@ jobs:
       - name: Login to Expo
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: eas login --token $EXPO_TOKEN
+        run: echo $EXPO_TOKEN | eas login
 
       - name: Configure EAS
         working-directory: ./PharmacyApp
