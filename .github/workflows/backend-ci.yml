@@ -48,4 +48,4 @@ jobs:
       if: always()
       with:
         name: test-results
-        path: gestion-pharmacie/target/surefire-reports/ 
+        path: gestion-pharmacie/target/surefire-reports/
