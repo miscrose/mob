@@ -22,12 +22,8 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-
-      - name: Railway login & deploy
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: |
-          echo $RAILWAY_TOKEN | railway login
-          railway up --service backend
+      - name: Deploy to Railway
+        uses: bervProject/railway-deploy@v1.0.0
+        with:
+          token: ${{ secrets.RAILWAY_TOKEN }}
+          service: backend
