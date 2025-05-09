@@ -22,7 +22,10 @@ jobs:
           distribution: 'temurin'
 
       - name: Install Railway CLI
-        run: npm i -g @railway/cli  # Installer la CLI Railway
+        run: npm i -g @railway/cli
+
+      - name: Create Railway config directory
+        run: mkdir -p ~/.railway
 
       - name: Set Railway token for login
         run: echo ${{ secrets.RAILWAY_TOKEN }} > ~/.railway/config.json
