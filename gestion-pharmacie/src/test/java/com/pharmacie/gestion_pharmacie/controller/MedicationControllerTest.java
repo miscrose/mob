@@ -118,8 +118,8 @@ public class MedicationControllerTest {
 
     private Pharmacy createTestPharmacy() throws Exception {
         // Nettoyer la base avant le test
-        medicationRepository.deleteAll(); 
-        pharmacyRepository.deleteAll();   
+   //     medicationRepository.deleteAll(); 
+   //     pharmacyRepository.deleteAll();   
 
         // Créer une pharmacie de test
         Pharmacy pharmacy = new Pharmacy();
