@@ -26,7 +26,7 @@ jobs:
 
       - name: Railway login & deploy
         env:
-          RAILWAY_TOKEN: 4c94f2f0-b018-4fc3-beae-759c16ac44c7
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          railway login --token 4c94f2f0-b018-4fc3-beae-759c16ac44c7
+          echo $RAILWAY_TOKEN | railway login
           railway up --service backend
