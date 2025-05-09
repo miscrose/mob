@@ -28,5 +28,6 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          railway login --token $RAILWAY_TOKEN
+          # Utilisation correcte de railway login sans --token
+          echo $RAILWAY_TOKEN | railway login --apiKey
           railway up --service backend
