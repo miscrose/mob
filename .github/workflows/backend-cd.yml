@@ -1,14 +1,13 @@
 name: Backend CD
 
 on:
-  workflow_run:
-    workflows: ["Backend CI"]
-    types:
-      - completed
+  push:
+    branches: [main]
+    paths:
+      - 'gestion-pharmacie/**'
 
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -26,8 +25,7 @@ jobs:
 
       - name: Railway login & deploy
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_TOKEN: 4c94f2f0-b018-4fc3-beae-759c16ac44c7
         run: |
-          # Utilisation correcte de railway login sans --token
-          echo $RAILWAY_TOKEN | railway login --apiKey
+          railway login --token $RAILWAY_TOKEN
           railway up --service backend
