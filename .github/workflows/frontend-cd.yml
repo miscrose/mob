@@ -30,14 +30,13 @@ jobs:
       - name: Install EAS CLI
         run: npm install -g eas-cli
 
-      - name: Login to Expo
+      - name: Setup EAS
+        working-directory: ./PharmacyApp
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: echo $EXPO_TOKEN | eas login
-
-      - name: Configure EAS
-        working-directory: ./PharmacyApp
         run: |
+          echo "//registry.npmjs.org/:_authToken=${EXPO_TOKEN}" > .npmrc
+          eas whoami
           eas build:configure
 
       - name: Deploy to Expo
@@ -45,4 +44,4 @@ jobs:
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
-          eas update --branch preview --message "GitHub Actions deployment" 
+          eas update --branch preview --message "GitHub Actions deployment"
