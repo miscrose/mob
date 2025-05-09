@@ -3,7 +3,8 @@ name: Backend CD
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
       - 'gestion-pharmacie/**'
 
@@ -22,17 +23,11 @@ jobs:
           distribution: 'temurin'
 
       - name: Install Railway CLI
-        run: npm i -g @railway/cli
+        run: npm install -g @railway/cli
 
       - name: Railway login & deploy
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-     
-          mkdir -p ~/.railway
-          
-      
-          echo '{"token": "${{ secrets.RAILWAY_TOKEN }}"}' > ~/.railway/config.json
-
-        
+          echo $RAILWAY_TOKEN | railway login
           railway up --service backend
