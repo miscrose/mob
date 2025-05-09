@@ -9,13 +9,6 @@ CREATE TABLE IF NOT EXISTS pharmacies (
     created_at TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS stocks (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    pharmacy_id BIGINT,
-    medication_id BIGINT,
-    FOREIGN KEY (pharmacy_id) REFERENCES pharmacies(id) ON DELETE CASCADE
-);
-
 CREATE TABLE IF NOT EXISTS medications (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -24,5 +17,12 @@ CREATE TABLE IF NOT EXISTS medications (
     seuil INT NOT NULL,
     sell_price DOUBLE NOT NULL,
     pharmacy_id BIGINT,
+    CONSTRAINT fk_pharmacy FOREIGN KEY (pharmacy_id) REFERENCES pharmacies(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS stocks (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    pharmacy_id BIGINT,
+    medication_id BIGINT,
     FOREIGN KEY (pharmacy_id) REFERENCES pharmacies(id) ON DELETE CASCADE
-); 
+);
