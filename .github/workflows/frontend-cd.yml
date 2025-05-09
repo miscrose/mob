@@ -44,7 +44,7 @@ jobs:
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
-          eas build --platform all --profile preview --non-interactive
+          eas build --platform android --profile preview --non-interactive
 
       - name: Deploy Update
         working-directory: ./PharmacyApp
