@@ -28,5 +28,5 @@ jobs:
         env:
           RAILWAY_TOKEN: 4c94f2f0-b018-4fc3-beae-759c16ac44c7
         run: |
-          railway login --token $RAILWAY_TOKEN
+          railway login --token 4c94f2f0-b018-4fc3-beae-759c16ac44c7
           railway up --service backend
