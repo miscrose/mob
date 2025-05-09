@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.pharmacie.gestion_pharmacie.model.Pharmacy;
 import com.pharmacie.gestion_pharmacie.repository.PharmacyRepository;
+import com.pharmacie.gestion_pharmacie.repository.MedicationRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -38,6 +39,9 @@ public class AuthControllerTest {
     @Autowired
     private PharmacyRepository pharmacyRepository;
 
+    @Autowired
+    private MedicationRepository medicationRepository;
+
     private String authToken;
     private Pharmacy testPharmacy;
 
@@ -56,8 +60,6 @@ public class AuthControllerTest {
             // 4. Test Signup avec email existant
             testSignupWithExistingEmail();
             
-          
-            
         } catch (Exception e) {
             fail("Le test a échoué à l'étape: " + e.getMessage());
         }
@@ -65,7 +67,8 @@ public class AuthControllerTest {
 
     private void signup() throws Exception {
         // Nettoyer la base avant le test
-        pharmacyRepository.deleteAll();
+        medicationRepository.deleteAll(); // Supprimer d'abord les médicaments
+        pharmacyRepository.deleteAll();   // Puis les pharmacies
 
         // Préparer les données de test
         testPharmacy = new Pharmacy();
@@ -148,6 +151,4 @@ public class AuthControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Email is already taken!"));
     }
-
-
 }
