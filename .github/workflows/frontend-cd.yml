@@ -35,12 +35,20 @@ jobs:
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
-          eas login --non-interactive --token $EXPO_TOKEN
+          echo "//registry.npmjs.org/:_authToken=${EXPO_TOKEN}" > .npmrc
+          echo "EXPO_TOKEN=${EXPO_TOKEN}" >> .env
+          echo "EXPO_USERNAME=${EXPO_TOKEN}" >> .env
 
-      - name: Build and Deploy
+      - name: Build Preview
         working-directory: ./PharmacyApp
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
-          eas build --platform all --non-interactive
+          eas build --platform all --profile preview --non-interactive
+
+      - name: Deploy Update
+        working-directory: ./PharmacyApp
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
           eas update --branch preview --message "GitHub Actions deployment"
