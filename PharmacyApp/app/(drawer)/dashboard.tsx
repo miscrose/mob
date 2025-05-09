@@ -36,7 +36,7 @@ export default function Dashboard() {
 
   useFocusEffect(
     React.useCallback(() => {
-      fetchDashboardData();
+    fetchDashboardData();
     }, [selectedPeriod])
   );
 
