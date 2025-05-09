@@ -43,68 +43,64 @@ public class MedicationControllerTest {
     private PharmacyRepository pharmacyRepository;
 
     private String authToken;
+    private Pharmacy testPharmacy;
 
     @Test
-    public void testAddMedication() throws Exception {
+    public void testCompleteMedicationFlow() throws Exception {
         try {
-          
-            Pharmacy pharmacy = createTestPharmacy();
-            authenticate(pharmacy);
+            // 1. Test création d'une pharmacie et authentification
+            setupPharmacyAndAuthenticate();
             
-          
-            MockMultipartFile imageFile = new MockMultipartFile(
-                "image",
-                "test-image.jpg",
-                MediaType.IMAGE_JPEG_VALUE,
-                "test image content".getBytes()
-            );
-
-          
-           mockMvc.perform(multipart("/api/medications/add")
-                    .file(imageFile)
-                    .param("name", "Test Medication")
-                    .param("description", "Test Description")
-                    .param("pharmacyId", String.valueOf(pharmacy.getId()))
-                    .param("seuil", "10")
-                    .param("sellPrice", "19.99")
-                    .header("Authorization", "Bearer " + authToken))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.name").value("Test Medication"))
-                    .andExpect(jsonPath("$.description").value("Test Description"))
-                    .andExpect(jsonPath("$.seuil").value(10))
-                    .andExpect(jsonPath("$.sellPrice").value(19.99))
-                    .andReturn();
-
-        
-        
-            Medication savedMedication = medicationRepository.findByName("Test Medication")
-                    .orElseThrow(() -> new Exception("Medication not found in database"));
+            // 2. Test ajout d'un médicament
+            testAddMedication();
             
-            assertEquals("Test Medication", savedMedication.getName());
-            assertEquals("Test Description", savedMedication.getDescription());
-            assertEquals(10, savedMedication.getSeuil());
-            assertEquals(19.99, savedMedication.getSellPrice());
-            assertEquals(pharmacy.getId(), savedMedication.getPharmacy().getId());
-
+            // 3. Test ajout d'un médicament sans image
+            testAddMedicationWithoutImage();
+            
+            // 4. Test ajout d'un médicament avec données invalides
+            testAddMedicationWithInvalidData();
+            
         } catch (Exception e) {
             fail("Le test a échoué: " + e.getMessage());
         }
     }
 
-    private void authenticate(Pharmacy pharmacy) throws Exception {
-   
-        Map<String, String> loginRequest = new HashMap<>();
-        loginRequest.put("email", pharmacy.getEmail());
-        loginRequest.put("password", "password123"); // Utiliser le mot de passe en clair
+    private void setupPharmacyAndAuthenticate() throws Exception {
+        // Nettoyer la base avant le test
+        medicationRepository.deleteAll();
+        pharmacyRepository.deleteAll();
 
-        MvcResult result = mockMvc.perform(post("/api/auth/login")
+        // Créer une pharmacie de test
+        testPharmacy = new Pharmacy();
+        testPharmacy.setName("Test Pharmacy");
+        testPharmacy.setEmail("test@pharmacy.com");
+        testPharmacy.setPassword("password123");
+        testPharmacy.setAddress("123 Test Street");
+        testPharmacy.setPhone("1234567890");
+
+        // Enregistrer la pharmacie
+        MvcResult result = mockMvc.perform(post("/api/auth/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testPharmacy)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        // Récupérer la pharmacie sauvegardée
+        testPharmacy = pharmacyRepository.findByEmail("test@pharmacy.com")
+                .orElseThrow(() -> new Exception("Pharmacy not found after signup"));
+
+        // Authentifier la pharmacie
+        Map<String, String> loginRequest = new HashMap<>();
+        loginRequest.put("email", testPharmacy.getEmail());
+        loginRequest.put("password", "password123");
+
+        result = mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.token").exists())
                 .andReturn();
 
-      
         String responseContent = result.getResponse().getContentAsString();
         JsonNode jsonNode = objectMapper.readTree(responseContent);
         authToken = jsonNode.get("token").asText();
@@ -112,40 +108,72 @@ public class MedicationControllerTest {
         if (authToken == null || authToken.isEmpty()) {
             throw new Exception("Authentication failed: No token received");
         }
-
-        System.out.println("Token received: " + authToken);
     }
 
-    private Pharmacy createTestPharmacy() throws Exception {
-        // Nettoyer la base avant le test
-   //     medicationRepository.deleteAll(); 
-   //     pharmacyRepository.deleteAll();   
+    private void testAddMedication() throws Exception {
+        MockMultipartFile imageFile = new MockMultipartFile(
+            "image",
+            "test-image.jpg",
+            MediaType.IMAGE_JPEG_VALUE,
+            "test image content".getBytes()
+        );
 
-        // Créer une pharmacie de test
-        Pharmacy pharmacy = new Pharmacy();
-        pharmacy.setName("Test Pharmacy");
-        pharmacy.setEmail("test@pharmacy.com");
-        pharmacy.setPassword("password123");
-        pharmacy.setAddress("123 Test Street");
-        pharmacy.setPhone("1234567890");
-
-        System.out.println("Signup request: " + objectMapper.writeValueAsString(pharmacy));
-
-       
-        MvcResult result = mockMvc.perform(post("/api/auth/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(pharmacy)))
+        mockMvc.perform(multipart("/api/medications/add")
+                .file(imageFile)
+                .param("name", "Test Medication")
+                .param("description", "Test Description")
+                .param("pharmacyId", String.valueOf(testPharmacy.getId()))
+                .param("seuil", "10")
+                .param("sellPrice", "19.99")
+                .header("Authorization", "Bearer " + authToken))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Test Medication"))
+                .andExpect(jsonPath("$.description").value("Test Description"))
+                .andExpect(jsonPath("$.seuil").value(10))
+                .andExpect(jsonPath("$.sellPrice").value(19.99))
                 .andReturn();
 
-        System.out.println("Signup response: " + result.getResponse().getContentAsString());
+        Medication savedMedication = medicationRepository.findByName("Test Medication")
+                .orElseThrow(() -> new Exception("Medication not found in database"));
+        
+        assertEquals("Test Medication", savedMedication.getName());
+        assertEquals("Test Description", savedMedication.getDescription());
+        assertEquals(10, savedMedication.getSeuil());
+        assertEquals(19.99, savedMedication.getSellPrice());
+        assertEquals(testPharmacy.getId(), savedMedication.getPharmacy().getId());
+    }
 
-      
-        Pharmacy savedPharmacy = pharmacyRepository.findByEmail("test@pharmacy.com")
-                .orElseThrow(() -> new Exception("Pharmacy not found after signup"));
+    private void testAddMedicationWithoutImage() throws Exception {
+        // Créer un fichier image vide mais valide
+        MockMultipartFile imageFile = new MockMultipartFile(
+            "image",
+            "empty-image.jpg",
+            MediaType.IMAGE_JPEG_VALUE,
+            new byte[0]
+        );
 
-        System.out.println("Saved pharmacy: " + objectMapper.writeValueAsString(savedPharmacy));
+        mockMvc.perform(multipart("/api/medications/add")
+                .file(imageFile)
+                .param("name", "Test Medication No Image")
+                .param("description", "Test Description")
+                .param("pharmacyId", String.valueOf(testPharmacy.getId()))
+                .param("seuil", "10")
+                .param("sellPrice", "19.99")
+                .header("Authorization", "Bearer " + authToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Test Medication No Image"))
+                .andReturn();
+    }
 
-        return savedPharmacy;
+    private void testAddMedicationWithInvalidData() throws Exception {
+        mockMvc.perform(multipart("/api/medications/add")
+                .param("name", "") // Nom vide
+                .param("description", "Test Description")
+                .param("pharmacyId", String.valueOf(testPharmacy.getId()))
+                .param("seuil", "-1") // Seuil invalide
+                .param("sellPrice", "-10.0") // Prix invalide
+                .header("Authorization", "Bearer " + authToken))
+                .andExpect(status().isBadRequest())
+                .andReturn();
     }
 } 
