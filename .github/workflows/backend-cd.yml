@@ -27,8 +27,9 @@ jobs:
       - name: Create Railway config directory
         run: mkdir -p ~/.railway
 
-      - name: Set Railway token for login
-        run: echo ${{ secrets.RAILWAY_TOKEN }} > ~/.railway/config.json
+      - name: Set Railway token in config
+        run: |
+          echo '{"token": "${{ secrets.RAILWAY_TOKEN }}"}' > ~/.railway/config.json
 
       - name: Deploy to Railway
         run: railway up --service backend
