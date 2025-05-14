@@ -1,4 +1,3 @@
-
 FROM node:18-slim
 
 
@@ -24,4 +23,4 @@ COPY . .
 EXPOSE 8081
 
 
-CMD ["npx", "expo", "start", "--web"] 
+CMD ["npx", "expo", "start"] 
