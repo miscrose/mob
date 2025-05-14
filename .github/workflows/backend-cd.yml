@@ -2,15 +2,17 @@ name: Backend CD
 
 on:
   workflow_dispatch:
-  push:
+  workflow_run:
+    workflows: ["Backend CI"]
+    types:
+      - completed
     branches:
       - main
-    paths:
-      - 'gestion-pharmacie/**'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Checkout code
