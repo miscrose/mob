@@ -47,17 +47,14 @@ public class MedicationControllerTest {
 
     @Test
     public void testCompleteMedicationFlow() throws Exception {
-        try {
-            // 1. Test création d'une pharmacie et authentification
+            try {
+                
             setupPharmacyAndAuthenticate();
             
-            // 2. Test ajout d'un médicament
             testAddMedication();
-            
-            // 3. Test ajout d'un médicament sans image
+           
             testAddMedicationWithoutImage();
             
-            // 4. Test ajout d'un médicament avec données invalides
             testAddMedicationWithInvalidData();
             
         } catch (Exception e) {
@@ -66,11 +63,11 @@ public class MedicationControllerTest {
     }
 
     private void setupPharmacyAndAuthenticate() throws Exception {
-        // Nettoyer la base avant le test
+     
         medicationRepository.deleteAll();
         pharmacyRepository.deleteAll();
 
-        // Créer une pharmacie de test
+      
         testPharmacy = new Pharmacy();
         testPharmacy.setName("Test Pharmacy");
         testPharmacy.setEmail("test@pharmacy.com");
@@ -78,18 +75,17 @@ public class MedicationControllerTest {
         testPharmacy.setAddress("123 Test Street");
         testPharmacy.setPhone("1234567890");
 
-        // Enregistrer la pharmacie
+      
         MvcResult result = mockMvc.perform(post("/api/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testPharmacy)))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        // Récupérer la pharmacie sauvegardée
         testPharmacy = pharmacyRepository.findByEmail("test@pharmacy.com")
                 .orElseThrow(() -> new Exception("Pharmacy not found after signup"));
 
-        // Authentifier la pharmacie
+  
         Map<String, String> loginRequest = new HashMap<>();
         loginRequest.put("email", testPharmacy.getEmail());
         loginRequest.put("password", "password123");

@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+
+  backend:
+    build:
+      context: ./gestion-pharmacie
+      dockerfile: Dockerfile
+    container_name: gest-backend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://caboose.proxy.rlwy.net:37548/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=LKiXqdwPBVMVEjcSABsQDYfCKQoKshZQ
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+      - SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL=true
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQLDialect
+      - JWT_SECRET=votreCleSecreteTresLongueEtComplexePourLaProduction
+      - JWT_EXPIRATION=86400000
+      - SPRING_JPA_OPEN_IN_VIEW=false
+    networks:
+      - pharmacie-network
+
+
+  frontend:
+    build:
+      context: ./PharmacyApp
+      dockerfile: Dockerfile
+    container_name: gest-frontend
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+      - REACT_NATIVE_PACKAGER_HOSTNAME=0.0.0.0
+    stdin_open: true
+    tty: true
+    networks:
+      - pharmacie-network
+
+networks:
+  pharmacie-network:
+    driver: bridge 
