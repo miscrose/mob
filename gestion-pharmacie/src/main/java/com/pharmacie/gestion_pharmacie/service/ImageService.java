@@ -21,7 +21,7 @@ public class ImageService {
             Files.createDirectories(uploadPath);
         }
 
-        // Générer un nom de fichier unique
+     
         String originalFilename = file.getOriginalFilename();
         if (originalFilename == null) {
             throw new IllegalArgumentException("Le nom du fichier ne peut pas être null");
@@ -30,11 +30,11 @@ public class ImageService {
         String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
         String newFilename = UUID.randomUUID().toString() + extension;
 
-        // Sauvegarder le fichier
+     
         Path filePath = uploadPath.resolve(newFilename);
         Files.copy(file.getInputStream(), filePath);
 
-        // Retourner le chemin relatif
+      
         return pharmacyDir + newFilename;
     }
 }
